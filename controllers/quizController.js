@@ -1,7 +1,8 @@
 const Quiz = require("../models/Quiz");
+const Submission = require("../models/Submission");
 const { nanoid } = require("nanoid");
 
-// POST /api/quizzes/create
+// 🔐 POST /api/quizzes/create
 exports.createQuiz = async (req, res) => {
   const { title, description, questions } = req.body;
   const userId = req.user.id;
@@ -32,7 +33,8 @@ exports.createQuiz = async (req, res) => {
     res.status(500).json({ msg: "Error creating quiz", err });
   }
 };
-// GET /api/quizzes/:code
+
+// 🔓 GET /api/quizzes/:code
 exports.getQuizByCode = async (req, res) => {
   const quizCode = req.params.code.toUpperCase(); // sanitize input
 
@@ -48,10 +50,8 @@ exports.getQuizByCode = async (req, res) => {
     res.status(500).json({ msg: "Server error", err });
   }
 };
-const Quiz = require("../models/Quiz");
-const Submission = require("../models/Submission");
 
-// POST /api/quizzes/submit
+// 📝 POST /api/quizzes/submit
 exports.submitQuiz = async (req, res) => {
   const { code, answers } = req.body;
   const quizCode = code.toUpperCase();
@@ -86,17 +86,18 @@ exports.submitQuiz = async (req, res) => {
 
     await submission.save();
 
-    res.status(200).json({ 
-      msg: "Submitted", 
-      score, 
-      total: quiz.questions.length, 
-      submissionId: submission._id 
+    res.status(200).json({
+      msg: "Submitted",
+      score,
+      total: quiz.questions.length,
+      submissionId: submission._id,
     });
   } catch (err) {
     res.status(500).json({ msg: "Error during submission", err });
   }
 };
-// GET /api/scoreboard/:id
+
+// 📊 GET /api/scoreboard/:id
 exports.getScoreboard = async (req, res) => {
   try {
     const submission = await Submission.findById(req.params.id);
