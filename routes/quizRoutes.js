@@ -10,16 +10,32 @@ const {
 
 const auth = require("../middleware/authMiddleware");
 
-// 🔐 Teacher route: Create a quiz (must be logged in)
+/**
+ * @route   POST /api/quizzes/create
+ * @desc    Create a new quiz (only for teachers)
+ * @access  Private
+ */
 router.post("/create", auth, createQuiz);
 
-// 🔓 Student route: Fetch a quiz by code (no login required)
+/**
+ * @route   GET /api/quizzes/:code
+ * @desc    Fetch quiz details by code
+ * @access  Public
+ */
 router.get("/:code", getQuizByCode);
 
-// ✅ Student route: Submit quiz answers (auth optional — change as needed)
+/**
+ * @route   POST /api/quizzes/submit
+ * @desc    Submit quiz answers
+ * @access  Private (or public if anonymous is allowed)
+ */
 router.post("/submit", auth, submitQuiz);
 
-// 📊 Teacher route: Get scoreboard for a quiz
-router.get("/scoreboard/:id", getScoreboard);
+/**
+ * @route   GET /api/quizzes/scoreboard/:id
+ * @desc    Get scoreboard data for a quiz submission
+ * @access  Private
+ */
+router.get("/scoreboard/:id", auth, getScoreboard);
 
 module.exports = router;
